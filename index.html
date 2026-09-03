@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head><title>CI/CD Auto-Deployer</title><style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:sans-serif;padding:2rem;background:#090d16;color:#fff;max-width:900px;margin:auto;}table{width:100%;border-collapse:collapse;margin:1.5rem 0;background:#0f172a;border-radius:8px;}th,td{padding:8px;border:1px solid #334155;text-align:left;}pre{background:#1e293b;padding:8px;border-radius:4px;color:#38bdf8;font-size:0.85rem;}code{color:#38bdf8;}</style></head>
+<body>
+  <h1>Git Continuous Deployment Engine</h1>
+  <p style="color:#94a3b8;">Automated deployment hook listener for GitHub/GitLab commits.</p>
+
+  <h2 style="margin-top:1.5rem;">Registered Pipelines</h2>
+  <table>
+    <tr><th>Repository</th><th>Branch</th><th>Webhook URL</th></tr>
+    {% for p in pipelines %}
+      <tr>
+        <td><b>{{ p.repo_name }}</b></td>
+        <td>{{ p.branch }}</td>
+        <td><code>/webhook/{{ p.secret_token }}/</code></td>
+      </tr>
+    {% endfor %}
+  </table>
+
+  <h2>Recent Deployment Runs</h2>
+  <table>
+    <tr><th>Pipeline</th><th>Commit</th><th>Status</th><th>Output</th></tr>
+    {% for l in logs %}
+      <tr>
+        <td>{{ l.pipeline.repo_name }}</td>
+        <td><code>{{ l.commit_hash }}</code></td>
+        <td><span style="color:#4ade80;">{{ l.status }}</span></td>
+        <td><pre>{{ l.output_log }}</pre></td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="4">No webhook triggers logged yet.</td></tr>
+    {% endfor %}
+  </table>
+</body>
+</html>
